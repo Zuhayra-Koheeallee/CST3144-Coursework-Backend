@@ -14,9 +14,16 @@ app.use((req, res, next) => {
     next();
 });
 
+let lessons = require('./lessons.js');
+
 //GET welcome message
 app.get('/message',(req,res)=>{
     res.json("Welcome to After School Activities!");
+});
+
+//GET all lessons
+app.get('/lessons',(req,res)=>{
+    res.json(lessons);
 });
 
 //Page not found
