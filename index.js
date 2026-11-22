@@ -8,7 +8,7 @@ const cors = require('cors');
 require('dotenv').config({path: './config.env'});
 
 //MongoDB connection setup
-const {MongoClient} = require('mongodb');
+const {MongoClient,ObjectId} = require('mongodb');
 const uri=process.env.MONGODB_PREFIX + process.env.MONGODB_USERNAME + ':' + process.env.MONGODB_PASSWORD + process.env.MONGODB_URL;
 
 const client = new MongoClient(uri);
@@ -67,6 +67,19 @@ app.post('/orders', async (req, res) => {
         console.log(err);
         res.status(500).send("Error saving order to the database");
     }
+});
+
+//PUT update lesson spaces
+app.put('/lessons/:_id', async (req, res) => {
+    var body=req.body;
+    let collection = await db.collection('lesson');
+
+    const query = { _id: new ObjectId(req.params._id) };
+
+    const updates = { $set: req.body };
+
+    let result = await collection.updateOne(query,updates);
+    res.send(result);
 });
 
 //Page not found
