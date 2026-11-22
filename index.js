@@ -56,6 +56,19 @@ app.get('/lessons',async (req,res)=>{
     }
 });
 
+//POST a new order to MongoDB
+app.post('/orders', async (req, res) => {
+    try {
+        let order=req.body;
+        let collection = db.collection('order');
+        let result=await collection.insertOne(order);
+        res.json(result);
+    } catch (err) {
+        console.log(err);
+        res.status(500).send("Error saving order to the database");
+    }
+});
+
 //Page not found
 app.use((req, res) => {
     res.status(404).send("Page not found !")
