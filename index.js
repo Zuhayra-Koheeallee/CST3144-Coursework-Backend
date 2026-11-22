@@ -3,6 +3,30 @@ const app = express();
 const PORT = 3000;
 
 const cors = require('cors');
+
+//Load MongoDB confirguration
+require('dotenv').config({path: './config.env'});
+
+//MongoDB connection setup
+const {MongoClient} = require('mongodb');
+const uri=process.env.MONGODB_PREFIX + process.env.MONGODB_USERNAME + ':' + process.env.MONGODB_PASSWORD + process.env.MONGODB_URL;
+
+const client = new MongoClient(uri);
+const db =client.db('AfterSchoolActivities');
+
+//Connect to MongoDB Atlas
+async function connectToMongoDB() {
+    try {
+        await client.connect();
+        console.log("You successfully connected to MongoDB!");
+        return client;
+    } catch (err){
+        console.dir(err);
+    }
+}
+
+connectToMongoDB();
+
 app.use(cors());
 
 //Read incoming JSON data
