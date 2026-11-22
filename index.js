@@ -38,7 +38,6 @@ app.use((req, res, next) => {
     next();
 });
 
-let lessons = require('./lessons.js');
 
 //GET welcome message
 app.get('/message',(req,res)=>{
@@ -46,8 +45,15 @@ app.get('/message',(req,res)=>{
 });
 
 //GET all lessons
-app.get('/lessons',(req,res)=>{
-    res.json(lessons);
+app.get('/lessons',async (req,res)=>{
+    try {
+        let collection = db.collection('lesson');
+        let results=await collection.find({}).toArray();
+        res.json(results);
+    } catch (err) {
+        console.log(err);
+        res.status(500).send("Error retrieving lessons from the database");
+    }
 });
 
 //Page not found
