@@ -38,6 +38,9 @@ app.use((req, res, next) => {
     next();
 });
 
+//Static middleware for lesson images
+app.use('/images', express.static('images'));
+
 
 //GET welcome message
 app.get('/message',(req,res)=>{
