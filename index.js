@@ -74,15 +74,21 @@ app.post('/orders', async (req, res) => {
 
 //PUT update lesson spaces
 app.put('/lessons/:_id', async (req, res) => {
-    var body=req.body;
-    let collection = await db.collection('lesson');
+    try {
 
-    const query = { _id: new ObjectId(req.params._id) };
+        var body=req.body;
+        let collection = await db.collection('lesson');
 
-    const updates = { $set: req.body };
+        const query = { _id: new ObjectId(req.params._id) };
 
-    let result = await collection.updateOne(query,updates);
-    res.send(result);
+        const updates = { $set: req.body };
+
+        let result = await collection.updateOne(query,updates);
+        res.send(result);
+    } catch (err) {
+        console.log(err);
+        res.status(500).send("Error updating the lesson");
+    }
 });
 
 //Page not found
