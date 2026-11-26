@@ -1,6 +1,7 @@
 const express = require('express');
 const app = express();
 const PORT = 3000;
+const lessons = require('./lessons');
 
 const cors = require('cors');
 
@@ -25,7 +26,25 @@ async function connectToMongoDB() {
     }
 }
 
+//Update lesson images in MongoDb
+async function updateLessonImages() {
+    try {
+        let collection = db.collection('lesson');
+        for (let lesson of lessons) {
+            const query = { id: lesson.id };
+            const update = { $set: { image: lesson.image } };
+            await collection.updateOne(query, update);
+        }
+        console.log("Lesson images updated successfully!");
+    } catch (err) {
+        console.error("Error updating lesson images:", err);
+    }
+}
+
+//Connect to MongoDB
 connectToMongoDB();
+
+//Enable CORS       
 
 app.use(cors());
 
@@ -72,16 +91,16 @@ app.post('/orders', async (req, res) => {
     }
 });
 
-//PUT update lesson spaces
+//PUT update lesson attributes
 app.put('/lessons/:_id', async (req, res) => {
     try {
 
         var body=req.body;
-        let collection = await db.collection('lesson');
+        let collection = db.collection('lesson');
 
         const query = { _id: new ObjectId(req.params._id) };
 
-        const updates = { $set: req.body };
+        const updates = { $set: body };
 
         let result = await collection.updateOne(query,updates);
         res.send(result);
