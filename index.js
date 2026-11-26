@@ -1,7 +1,7 @@
 const express = require('express');
 const app = express();
 const PORT = 3000;
-const lessons = require('./lessons');
+const path = require('path');
 
 const cors = require('cors');
 
@@ -26,21 +26,6 @@ async function connectToMongoDB() {
     }
 }
 
-//Update lesson images in MongoDb
-async function updateLessonImages() {
-    try {
-        let collection = db.collection('lesson');
-        for (let lesson of lessons) {
-            const query = { id: lesson.id };
-            const update = { $set: { image: lesson.image } };
-            await collection.updateOne(query, update);
-        }
-        console.log("Lesson images updated successfully!");
-    } catch (err) {
-        console.error("Error updating lesson images:", err);
-    }
-}
-
 //Connect to MongoDB
 connectToMongoDB();
 
@@ -58,7 +43,7 @@ app.use((req, res, next) => {
 });
 
 //Static middleware for lesson images
-app.use('/images', express.static('images'));
+app.use("/images", express.static(path.join(__dirname, "images")));
 
 
 //GET welcome message
